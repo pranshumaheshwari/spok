@@ -6,15 +6,15 @@ require 'period/version'
 Gem::Specification.new do |spec|
   spec.name          = "period"
   spec.version       = Period::VERSION
-  spec.authors       = ["Philip Sampaio"]
-  spec.email         = ["philip.sampaio@gmail.com"]
+  spec.authors       = ["Magnetis Staff"]
+  spec.email         = ["dev@magnetis.com.br"]
   spec.summary       = %q{A gem to work with periods of dates}
   spec.description   = %q{
     Work with period of dates in a easy way.
-    This gem provides functionalities like workdays, date as string and period to calendars. 
+    This gem provides functionalities like workdays, date as string and period to calendars.
   }
   spec.homepage      = "https://github.com/magnetis/period"
-  spec.license       = "MIT"
+  spec.license       = ""
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
