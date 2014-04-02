@@ -2,15 +2,12 @@ require 'active_support/core_ext'
 require 'set'
 require 'yaml'
 
-
-
-# Hash of Arrays containing Dates of holidays
-# Brasil  => 2001 - 2078
-# Bovespa => 1993 - 2022
-# TODO: add holidays before 2001 for :brasil (use :bovespa to infer?)
-# TODO: remove weekend dates from :brasil
-
 module Workday
+  # Hash of Arrays containing Dates of holidays
+  # Brasil  => 2001 - 2078
+  # Bovespa => 1993 - 2022
+  # TODO: add holidays before 2001 for :brasil (use :bovespa to infer?)
+  # TODO: remove weekend dates from :brasil
   holidays_file = File.join(File.dirname(__FILE__), "config/holidays.yml")
   holidays = YAML.load_file(holidays_file)
 
