@@ -147,6 +147,26 @@ describe Period do
     end
   end
 
+  describe '#years_difference' do
+    subject(:years_difference) { described_class.new(start_date, end_date).years_difference }
+    let(:start_date) { Date.new(2013, 1, 1) }
+
+    context 'when integer result' do
+      let(:end_date) { Date.new(2014, 1, 1) }
+      it { should == 1 }
+    end
+
+    context 'when fraction result' do
+      let(:end_date) { Date.new(2014, 7, 1) }
+      it { should == 1.5 }
+    end
+
+    context 'when fraction result' do
+      let(:end_date) { Date.new(2014, 9, 1) }
+      it { should == 1.7 }
+    end
+  end
+
   describe '#==' do
     let(:period) { Period.new(date1, date3) }
 
