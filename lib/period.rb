@@ -74,7 +74,7 @@ class Period
     (@end_date - @start_date).to_i
   end
 
-  def years_difference
+  def to_years
     ((@end_date - @start_date).to_f / 365).to_f.round(1)
   end
 

@@ -147,8 +147,8 @@ describe Period do
     end
   end
 
-  describe '#years_difference' do
-    subject(:years_difference) { described_class.new(start_date, end_date).years_difference }
+  describe '#to_years' do
+    subject(:to_years) { described_class.new(start_date, end_date).to_years }
     let(:start_date) { Date.new(2013, 1, 1) }
 
     context 'when integer result' do
