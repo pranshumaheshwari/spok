@@ -50,8 +50,8 @@ class Period
     as_string @end_date
   end
 
-  def workdays
-    (@start_date..@end_date).to_a.delete_if{ |date| date.restday? }
+  def workdays(calendar = :brasil)
+    (@start_date..@end_date).to_a.delete_if{ |date| date.restday?(calendar) }
   end
 
   def to_calendar(calendar = :bovespa)

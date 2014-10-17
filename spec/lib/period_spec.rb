@@ -63,6 +63,7 @@ describe Period do
   end
 
   describe '#workdays' do
+    # TODO: add scenario when calendar optional param is passed
     it 'returns only the workdays' do
       subject.workdays.should == [date2, date3]
     end
