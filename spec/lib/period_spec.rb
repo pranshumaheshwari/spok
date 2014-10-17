@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'period'
 
 describe Period do
-  let(:date1) { Date.new(2012,01,01) } # Sunday
-  let(:date2) { Date.new(2012,01,02) } # Monday
-  let(:date3) { Date.new(2012,01,03) } # Tuesday
+  let(:date1) { Date.new(2012, 1, 1) } # Sunday
+  let(:date2) { Date.new(2012, 1, 2) } # Monday
+  let(:date3) { Date.new(2012, 1, 3) } # Tuesday
 
   subject(:period) { described_class.new(date1, date3) }
 
@@ -63,9 +63,19 @@ describe Period do
   end
 
   describe '#workdays' do
-    # TODO: add scenario when calendar optional param is passed
-    it 'returns only the workdays' do
-      subject.workdays.should == [date2, date3]
+    subject(:period) { described_class.new(date1, date4) }
+
+    let(:date1) { Date.new(2013, 7, 7) }  # sunday
+    let(:date2) { Date.new(2013, 7, 8) }  # monday
+    let(:date3) { Date.new(2013, 7, 9) }  # bovespa holiday
+    let(:date4) { Date.new(2013, 7, 10) } # wednesday
+
+    it 'returns all workdays when no calendar is selected' do
+      period.workdays.should == [date2, date3, date4]
+    end
+
+    it 'returns only bovespa workdays when bovespa calendar is selected' do
+      subject.workdays(:bovespa).should == [date2, date4]
     end
   end
 
