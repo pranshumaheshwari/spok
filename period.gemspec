@@ -1,29 +1,29 @@
-# coding: utf-8
+# frozen_string_literal: true
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'period/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "period"
+  spec.name          = 'period'
   spec.version       = Period::VERSION
-  spec.authors       = ["Magnetis Staff"]
-  spec.email         = ["dev@magnetis.com.br"]
-  spec.summary       = %q{A gem to work with periods of dates}
+  spec.authors       = ['Magnetis Staff']
+  spec.email         = ['dev@magnetis.com.br']
+  spec.summary       = 'A gem to work with periods of dates'
   spec.description   = %q{
     Work with period of dates in a easy way.
     This gem provides functionalities like workdays, date as string and period to calendars.
   }
-  spec.homepage      = "https://github.com/magnetis/period"
-  spec.license       = ""
+  spec.homepage      = 'https://github.com/magnetis/period'
+  spec.license       = 'Magnetis Copyright'
 
-  spec.files         = `git ls-files -z`.split("\x0")
+  spec.files         = Dir['**/*']
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+  spec.require_paths = ['lib']
 
-  spec.add_dependency "activesupport", '~> 4.2.7.1'
+  spec.add_dependency 'activesupport', '~> 4.2'
 
-  spec.add_development_dependency "bundler", "~> 1.6"
-  spec.add_development_dependency "rake"
-  spec.add_development_dependency "rspec", "~> 2"
+  spec.add_development_dependency 'bundler', '~> 1.6'
+  spec.add_development_dependency 'rake'
+  spec.add_development_dependency 'rspec', '~> 2'
 end
