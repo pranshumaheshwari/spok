@@ -203,4 +203,9 @@ describe Period do
       it { (period == other_period).should be_false }
     end
   end
+
+  describe '#to_range' do
+    subject { Period.new(date1, date3).to_range }
+    it { is_expected.to eq((date1..date3)) }
+  end
 end
