@@ -84,6 +84,10 @@ class Period
     other_period.end_date == @end_date
   end
 
+  def to_range
+    (@start_date..@end_date)
+  end
+
   private
 
   def as_string(date)
