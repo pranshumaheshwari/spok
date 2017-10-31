@@ -184,23 +184,23 @@ describe Period do
     context 'when periods are equal' do
       let(:other_period) { Period.new(date1, date3) }
 
-      it { (period == other_period).should be_true }
+      it { (period == other_period).should eq(true) }
     end
 
     context 'when periods are not equal' do
       let(:other_period) { Period.new(date1, date2) }
 
-      it { (period == other_period).should be_false }
+      it { (period == other_period).should eq(false) }
     end
 
     context 'when the comparison does respond to start date' do
       let(:other_period) { double(:other_period, :end_date => double(:end_date)) }
-      it { (period == other_period).should be_false }
+      it { (period == other_period).should eq(false) }
     end
 
     context 'when the comparison does respond to end date' do
       let(:other_period) { double(:other_period, :start_date => date1) }
-      it { (period == other_period).should be_false }
+      it { (period == other_period).should eq(false) }
     end
   end
 

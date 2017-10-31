@@ -36,7 +36,7 @@ describe Workday do
     context 'holidays using bovespa calendar' do
       it 'is not a workday' do
         ['2012-07-09',  '2012-11-20',  '2012-12-24'].each do |holiday|
-          Date.parse(holiday).workday?(:bovespa).should be_false
+          Date.parse(holiday).workday?(:bovespa).should eq(false)
         end
       end
     end
