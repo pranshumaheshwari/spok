@@ -8,26 +8,26 @@ describe Workday do
   describe '#workday?' do
     context 'monday' do
       it 'is a workday' do
-        Date.new(2012,  8,  6).should be_workday
+        Date.new(2012, 8, 6).should be_workday
       end
     end
 
     context 'saturday' do
       it 'is not a workday' do
-        Date.new(2012,  8,  4).should_not be_workday
+        Date.new(2012, 8, 4).should_not be_workday
       end
     end
 
     context 'sunday' do
       it 'is not a workday' do
-        Date.new(2012,  8,  5).should_not be_workday
+        Date.new(2012, 8, 5).should_not be_workday
       end
     end
 
     context 'holidays using brasil calendar' do
       it 'is not a workday' do
-        ['2012-06-07',  '2012-09-07',  '2012-10-12',
-         '2012-11-02',  '2012-11-15',  '2012-12-25'].each do |holiday|
+        ['2012-06-07', '2012-09-07', '2012-10-12',
+         '2012-11-02', '2012-11-15', '2012-12-25'].each do |holiday|
           Date.parse(holiday).should_not be_workday
         end
       end
@@ -35,7 +35,7 @@ describe Workday do
 
     context 'holidays using bovespa calendar' do
       it 'is not a workday' do
-        ['2012-07-09',  '2012-11-20',  '2012-12-24'].each do |holiday|
+        ['2012-07-09', '2012-11-20', '2012-12-24'].each do |holiday|
           Date.parse(holiday).workday?(:bovespa).should eq(false)
         end
       end
@@ -44,29 +44,71 @@ describe Workday do
   end
 
   describe '#restday?' do
-    context 'monday' do
-      it 'is not a restday' do
-        Date.new(2012,  8,  6).should_not be_restday
+    context 'Using Date objects' do
+      context 'monday' do
+        it 'is not a restday' do
+          Date.new(2012, 8, 6).should_not be_restday
+        end
+      end
+
+      context 'saturday' do
+        it 'is a restday' do
+          Date.new(2012, 8, 4).should be_restday
+        end
+      end
+
+      context 'sunday' do
+        it 'is a restday' do
+          Date.new(2012, 8, 5).should be_restday
+        end
+      end
+
+      context 'holiday' do
+        [
+          Date.new(2012, 6, 07),
+          Date.new(2012, 9, 07),
+          Date.new(2012, 10, 12),
+          Date.new(2012, 11, 02),
+          Date.new(2012, 11, 15),
+          Date.new(2012, 12, 25)
+        ].each do |holiday|
+          it 'is a restday' do
+            holiday.should be_restday
+          end
+        end
       end
     end
 
-    context 'saturday' do
-      it 'is a restday' do
-        Date.new(2012,  8,  4).should be_restday
+    context 'using DateTime objects' do
+      context 'monday' do
+        it 'is not a restday' do
+          DateTime.new(2012, 8, 6, 12).should_not be_restday
+        end
       end
-    end
 
-    context 'sunday' do
-      it 'is a restday' do
-        Date.new(2012,  8,  5).should be_restday
+      context 'saturday' do
+        it 'is a restday' do
+          DateTime.new(2012, 8, 4, 12).should be_restday
+        end
       end
-    end
 
-    context 'holiday' do
-      it 'is a restday' do
-        ['2012-06-07',  '2012-09-07',  '2012-10-12',
-         '2012-11-02',  '2012-11-15',  '2012-12-25'].each do |holiday|
-          Date.parse(holiday).should be_restday
+      context 'sunday' do
+        it 'is a restday' do
+          DateTime.new(2012, 8, 5, 13).should be_restday
+        end
+      end
+
+      context 'holiday' do
+        [
+          DateTime.new(2017, 01, 01, 00),
+          DateTime.new(2017, 10, 12, 01),
+          DateTime.new(2017, 11, 02, 02),
+          DateTime.new(2017, 11, 15, 03),
+          DateTime.new(2017, 12, 25, 04)
+        ].each do |holiday|
+          it 'is a restday' do
+            holiday.should be_restday
+          end
         end
       end
     end
