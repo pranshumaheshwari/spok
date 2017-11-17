@@ -21,7 +21,7 @@ module Workday
     weekday = self.wday
     weekday == 0 || #saturday
     weekday == 6 || #sunday
-    HOLIDAYS[calendar].include?(self)
+    HOLIDAYS[calendar].include?(self.to_date)
   end
 
   def workday?(calendar = :brasil)
