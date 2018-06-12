@@ -2,131 +2,132 @@ require 'spec_helper'
 require 'period'
 
 describe Period do
-  let(:date1) { Date.new(2012, 1, 1) } # Sunday
-  let(:date2) { Date.new(2012, 1, 2) } # Monday
-  let(:date3) { Date.new(2012, 1, 3) } # Tuesday
+  let(:sunday) { Date.new(2012, 1, 1) }
+  let(:monday) { Date.new(2012, 1, 2) }
+  let(:tuesday) { Date.new(2012, 1, 3) }
 
-  subject(:period) { described_class.new(date1, date3) }
+  subject(:period) { described_class.new(sunday, tuesday) }
 
   describe '.parse' do
-    it { described_class.parse('20120101-20120103').should == period }
+    it { expect(described_class.parse('20120101-20120103')).to eq(period) }
 
     context 'when the input string is wrong' do
-      it { described_class.parse('20120101').should be_kind_of(Period::NullObject) }
-      it { described_class.parse(nil).should be_kind_of(Period::NullObject) }
-      it { described_class.parse('').should be_kind_of(Period::NullObject) }
+      it { expect(described_class.parse('20120101')).to be_kind_of(Period::NullObject) }
+      it { expect(described_class.parse(nil)).to be_kind_of(Period::NullObject) }
+      it { expect(described_class.parse('')).to be_kind_of(Period::NullObject) }
     end
   end
 
   describe '#date_as_integer' do
     it 'represents the start date as integer' do
-      subject.start_date_as_integer.should == 20120101
+      expect(subject.start_date_as_integer).to eq(20120101)
     end
 
     it 'represents the end date as integer' do
-      subject.end_date_as_integer.should == 20120103
+      expect(subject.end_date_as_integer).to eq(20120103)
     end
   end
 
   describe '#date_as_string' do
     it 'represents the start date as string' do
-      subject.start_date_as_string.should == '20120101'
+      expect(subject.start_date_as_string).to eq('20120101')
     end
 
     it 'represents the end date as string' do
-      subject.end_date_as_string.should == '20120103'
+      expect(subject.end_date_as_string).to eq('20120103')
     end
   end
 
   describe '#validate_period!' do
     it 'does not raise error when start date is before or equals to the end date' do
       expect { subject }.not_to raise_error
-      expect { described_class.new(date1, date1) }.not_to raise_error
+      expect { described_class.new(sunday, sunday) }.not_to raise_error
     end
 
     it 'raises exception when the start date is nil' do
-      expect { described_class.new(nil, date1) }.to raise_error(ArgumentError)
+      expect { described_class.new(nil, sunday) }.to raise_error(ArgumentError)
     end
 
     it 'raises exception when the end date is nil' do
-      expect { described_class.new(date3, nil) }.to raise_error(ArgumentError)
+      expect { described_class.new(tuesday, nil) }.to raise_error(ArgumentError)
     end
 
     it 'raises exception when the start date is greater than the end date' do
-      expect { described_class.new(date3, date1) }.to raise_error(ArgumentError)
+      expect { described_class.new(tuesday, sunday) }.to raise_error(ArgumentError)
     end
   end
 
   describe '#to_s' do
-    subject(:to_s) { period.to_s }
-    it { should == '20120101-20120103' }
+    it 'successfully converts Period to String' do
+      expect(period.to_s).to eq('20120101-20120103')
+    end
   end
 
   describe '#workdays' do
-    subject(:period) { described_class.new(date1, date4) }
+    subject(:period) { described_class.new(sunday, wednesday) }
 
-    let(:date1) { Date.new(2013, 7, 7) }  # sunday
-    let(:date2) { Date.new(2013, 7, 8) }  # monday
-    let(:date3) { Date.new(2013, 7, 9) }  # bovespa holiday
-    let(:date4) { Date.new(2013, 7, 10) } # wednesday
+    let(:sunday) { Date.new(2013, 7, 7) }
+    let(:monday) { Date.new(2013, 7, 8) }
+    let(:bovespa_holiday) { Date.new(2013, 7, 9) }
+    let(:wednesday) { Date.new(2013, 7, 10) }
 
     it 'returns all workdays when no calendar is selected' do
-      period.workdays.should == [date2, date3, date4]
+      expect(period.workdays).to eq([monday, bovespa_holiday, wednesday])
     end
 
     it 'returns only bovespa workdays when bovespa calendar is selected' do
-      subject.workdays(:bovespa).should == [date2, date4]
+      expect(subject.workdays(:bovespa)).to eq([monday, wednesday])
     end
   end
 
   describe '#to_calendar' do
     context 'when bovespa is the calendar' do
-      subject { described_class.new(date1, date3).to_calendar(:bovespa) }
+      subject { described_class.new(sunday, tuesday).to_calendar(:bovespa) }
       context 'and start date on a bovespa holiday' do
         let(:start_date) { Date.new(2013, 7, 8) }
-        let(:date1)      { Date.new(2013, 7, 9) } # bovespa holiday
-        let(:date3)      { Date.new(2013, 7, 11) }
+        let(:sunday)      { Date.new(2013, 7, 9) } # bovespa holiday
+        let(:tuesday)      { Date.new(2013, 7, 11) }
         it 'returns the last bovespa workday as the start date' do
-          subject.start_date.should == start_date
+          expect(subject.start_date).to eq(start_date)
         end
       end
 
       context 'and end date on a bovespa holiday' do
-        let(:date1)    { Date.new(2013, 7, 7) }
-        let(:date3)    { Date.new(2013, 7, 9) } # bovespa holiday
+        let(:sunday)    { Date.new(2013, 7, 7) }
+        let(:tuesday)    { Date.new(2013, 7, 9) } # bovespa holiday
         let(:end_date) { Date.new(2013, 7, 8) }
         it 'returns the last bovespa workday as the end date' do
-          subject.end_date.should == end_date
+          expect(subject.end_date).to eq(end_date)
         end
       end
 
       context 'and start and end date on a bovespa holiday' do
-        let(:date1)    { Date.new(2012, 12, 31) } #bovespa holiday
-        let(:date3)    { Date.new(2013, 1, 1) } # bovespa holiday
+        let(:sunday)    { Date.new(2012, 12, 31) } #bovespa holiday
+        let(:tuesday)    { Date.new(2013, 1, 1) } # bovespa holiday
         it 'start and end date are going to be the same' do
-          subject.start_date.should == subject.end_date
+          expect(subject.start_date).to eq(subject.end_date)
         end
       end
     end
 
     context 'when brasil is the calendar' do
-      subject { described_class.new(date1, date3).to_calendar(:brasil) }
+      subject { described_class.new(sunday, tuesday).to_calendar(:brasil) }
 
       context 'and the start date is holiday' do
         let(:start_date) { Date.new(2013, 9, 6) }
-        let(:date1)      { Date.new(2013, 9, 7) } # brasil holiday
-        let(:date3)      { Date.new(2013, 9, 10) }
+        let(:sunday)      { Date.new(2013, 9, 7) } # brasil holiday
+        let(:tuesday)      { Date.new(2013, 9, 10) }
         it 'returns the last workday as the start date' do
-          subject.start_date.should == start_date
+          expect(subject.start_date).to eq(start_date)
         end
       end
 
       context 'end date on a bovespa holiday' do
-        let(:date1)    { Date.new(2013, 9, 5) }
-        let(:date3)    { Date.new(2013, 9, 7) } # brasil holiday
+        let(:sunday)    { Date.new(2013, 9, 5) }
+        let(:tuesday)    { Date.new(2013, 9, 7) } # brasil holiday
         let(:end_date) { Date.new(2013, 9, 6) }
         it 'returns the last bovespa workday as the end date' do
-          subject.end_date.should == end_date
+          expect(subject.end_date).to eq(end_date)
         end
       end
     end
@@ -134,78 +135,75 @@ describe Period do
 
   describe '#one_day_period?' do
     context 'when the start and end date are the same' do
-      let(:date3)    { date1 }
-      it { subject.should be_one_day_period }
+      let(:tuesday)    { sunday }
+      it { expect(subject).to be_one_day_period }
     end
 
     context 'when the start and end date are different' do
-      it { subject.should_not be_one_day_period }
+      it { expect(subject).not_to be_one_day_period }
     end
   end
 
   describe '#days_count' do
-    subject { described_class.new(start_date, end_date).days_count }
+    it 'counts number of days on period' do
+      period = described_class.new(sunday, tuesday)
 
-    let(:start_date) { date1 }
-    let(:end_date)   { date3 }
-    it { should == 2 }
+      expect(period.days_count).to eq(2)
+    end
 
-    context 'when start date is equals to the end date' do
-      let(:start_date) { date1 }
-      let(:end_date)   { date1 }
+    it 'returns 0 when start date is equal to the end date' do
+      period = described_class.new(sunday, sunday)
 
-      it { should == 0 }
+      expect(period.days_count).to eq(0)
     end
   end
 
   describe '#to_years' do
-    subject(:to_years) { described_class.new(start_date, end_date).to_years }
     let(:start_date) { Date.new(2013, 1, 1) }
 
-    context 'when integer result' do
-      let(:end_date) { Date.new(2014, 1, 1) }
-      it { should == 1 }
+    it 'calculates integer result' do
+      end_date = Date.new(2014, 1, 1)
+
+      expect(described_class.new(start_date, end_date).to_years).to eq(1)
     end
 
-    context 'when fraction result' do
-      let(:end_date) { Date.new(2014, 7, 1) }
-      it { should == 1.5 }
-    end
+    it 'calculates fraction result' do
+      period = described_class.new(start_date, Date.new(2014, 7, 1))
+      greater_period = described_class.new(start_date, Date.new(2014, 9, 1))
 
-    context 'when fraction result' do
-      let(:end_date) { Date.new(2014, 9, 1) }
-      it { should == 1.7 }
+      expect(period.to_years).to eq(1.5)
+      expect(greater_period.to_years).to eq(1.7)
     end
   end
 
   describe '#==' do
-    let(:period) { Period.new(date1, date3) }
+    let(:period) { Period.new(sunday, tuesday) }
 
     context 'when periods are equal' do
-      let(:other_period) { Period.new(date1, date3) }
+      let(:other_period) { Period.new(sunday, tuesday) }
 
-      it { (period == other_period).should eq(true) }
+      it { expect(period == other_period).to eq(true) }
     end
 
     context 'when periods are not equal' do
-      let(:other_period) { Period.new(date1, date2) }
+      let(:other_period) { Period.new(sunday, monday) }
 
-      it { (period == other_period).should eq(false) }
+      it { expect(period == other_period).to eq(false) }
     end
 
     context 'when the comparison does respond to start date' do
       let(:other_period) { double(:other_period, :end_date => double(:end_date)) }
-      it { (period == other_period).should eq(false) }
+      it { expect(period == other_period).to eq(false) }
     end
 
     context 'when the comparison does respond to end date' do
-      let(:other_period) { double(:other_period, :start_date => date1) }
-      it { (period == other_period).should eq(false) }
+      let(:other_period) { double(:other_period, :start_date => sunday) }
+      it { expect(period == other_period).to eq(false) }
     end
   end
 
   describe '#to_range' do
-    subject { Period.new(date1, date3).to_range }
-    it { is_expected.to eq((date1..date3)) }
+    subject { Period.new(sunday, tuesday).to_range }
+    it { is_expected.to eq((sunday..tuesday)) }
   end
 end
