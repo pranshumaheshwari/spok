@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
     This gem provides functionalities like workdays, date as string and period to calendars.
   }
   spec.homepage      = 'https://github.com/magnetis/period'
-  spec.license       = 'Magnetis Copyright'
+  spec.license       = 'Apache 2.0'
 
   spec.files         = Dir['**/*']
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
