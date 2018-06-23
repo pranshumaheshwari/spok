@@ -18,32 +18,27 @@ module Workday
     [calendar, Set.new(holidays[calendar.to_s])]
   end.to_h
 
-  def restday?(calendar = :brasil)
-    weekday = self.wday
+  def self.restday?(date, calendar: :brasil)
+    weekday = date.wday
+
     weekday == 0 || #saturday
     weekday == 6 || #sunday
-    HOLIDAYS[calendar].include?(self.to_date)
+    HOLIDAYS[calendar].include?(date.to_date)
   end
 
-  def workday?(calendar = :brasil)
-    !restday?(calendar)
+  def self.workday?(date, calendar: :brasil)
+    !restday?(date, calendar: calendar)
   end
 
-  def last_workday(calendar = :brasil)
-    return self if workday?(calendar)
-    (self - 1.day).last_workday(calendar)
+  def self.last_workday(date, calendar: :brasil)
+    return date if workday?(date, calendar: calendar)
+
+    last_workday((date - 1.day), calendar: calendar)
   end
 
-  def next_workday(calendar = :brasil)
-    return self if workday?(calendar)
-    (self + 1.day).next_workday(calendar)
-  end
-end
+  def self.next_workday(date, calendar: :brasil)
+    return date if workday?(date, calendar: calendar)
 
-module Workdays
-  DATE_FORMAT = '%Y%m%d'
-
-  def as_string(format = DATE_FORMAT)
-    self.map{ |date| date.strftime(format) }
+    next_workday((date + 1.day), calendar: calendar)
   end
 end
