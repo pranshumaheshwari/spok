@@ -1,5 +1,5 @@
 require "period/version"
-require "period/date_extensions"
+require 'period/workday'
 
 class Period
   DATE_FORMAT = '%Y%m%d'
@@ -51,11 +51,14 @@ class Period
   end
 
   def workdays(calendar = :brasil)
-    (@start_date..@end_date).to_a.delete_if{ |date| date.restday?(calendar) }
+    (@start_date..@end_date).to_a.delete_if{ |date| Workday.restday?(date, calendar: calendar) }
   end
 
   def to_calendar(calendar = :bovespa)
-    Period.new(@start_date.last_workday(calendar), @end_date.last_workday(calendar))
+    Period.new(
+      Workday.last_workday(@start_date, calendar: calendar),
+      Workday.last_workday(@end_date, calendar: calendar)
+    )
   end
 
   def to_a
