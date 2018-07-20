@@ -12,9 +12,9 @@ describe Period do
     it { expect(described_class.parse('20120101-20120103')).to eq(period) }
 
     context 'when the input string is wrong' do
-      it { expect(described_class.parse('20120101')).to be_kind_of(Period::NullObject) }
-      it { expect(described_class.parse(nil)).to be_kind_of(Period::NullObject) }
-      it { expect(described_class.parse('')).to be_kind_of(Period::NullObject) }
+      it { expect(described_class.parse('20120101')).to be_nil }
+      it { expect(described_class.parse(nil)).to be_nil }
+      it { expect(described_class.parse('')).to be_nil }
     end
   end
 
