@@ -111,6 +111,36 @@ describe Period::Workday do
     end
   end
 
+  describe '#weekend?' do
+    it 'returns true when date is a Saturday' do
+      expect(described_class.weekend?(Date.new(2018, 8, 11))).to eq(true)
+    end
+
+    it 'returns true when date is a Sunday' do
+      expect(described_class.weekend?(Date.new(2018, 8, 12))).to eq(true)
+    end
+
+    it 'returns false when date is not a Saturday or Sunday' do
+      expect(described_class.weekend?(Date.new(2018, 8, 13))).to eq(false)
+      expect(described_class.weekend?(Date.new(2018, 8, 14))).to eq(false)
+      expect(described_class.weekend?(Date.new(2018, 8, 15))).to eq(false)
+      expect(described_class.weekend?(Date.new(2018, 8, 16))).to eq(false)
+      expect(described_class.weekend?(Date.new(2018, 8, 17))).to eq(false)
+    end
+  end
+
+  describe '#holiday?' do
+    it 'returns false when date is not a holiday on the given calendar' do
+      expect(described_class.holiday?(Date.new(2018, 05, 02), calendar: :brasil)).to eq(false)
+      expect(described_class.holiday?(Date.new(2018, 12, 15), calendar: :bovespa)).to eq(false)
+    end
+
+    it 'returns true when date is a holiday on the given calendar' do
+      expect(described_class.holiday?(Date.new(2018, 05, 01), calendar: :brasil)).to eq(true)
+      expect(described_class.holiday?(Date.new(2018, 12, 25), calendar: :bovespa)).to eq(true)
+    end
+  end
+
   describe '#last_workday' do
     context 'when date is 2012-10-25 (Thursday)' do
       it 'returns the same date' do
