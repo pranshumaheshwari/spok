@@ -8,9 +8,6 @@ class Period
   # All methods are module methods and should be called on the Period::Workday
   # module.
   module Workday
-    # TODO: add holidays before 2001 for :brasil (use :bovespa to infer?)
-    # TODO: remove weekend dates from :brasil
-
     # Public: Array of available calendars.
     CALENDARS = %i(brasil bovespa)
 
@@ -34,11 +31,7 @@ class Period
     #
     # Returns a boolean.
     def self.restday?(date, calendar: :brasil)
-      weekday = date.wday
-
-      weekday == 0 || #saturday
-      weekday == 6 || #sunday
-      HOLIDAYS[calendar].include?(date.to_date)
+      self.weekend?(date) || self.holiday?(date, calendar: calendar)
     end
 
     # Public: Checks if a given day is a workday.
@@ -57,6 +50,37 @@ class Period
       !restday?(date, calendar: calendar)
     end
 
+    # Public: Checks if a given Date is on a weekend.
+    #
+    # date - The Date to be checked.
+    #
+    # Examples
+    #
+    #   Period::Workday.weekend?(Date.new(2012, 8, 6))
+    #   # => false
+    #
+    # Returns a boolean.
+    def self.weekend?(date)
+      weekday = date.wday
+
+      weekday == 0 || weekday == 6
+    end
+
+    # Public: Checks if a given Date is on a holiday.
+    #
+    # date     - The Date to be checked.
+    # calendar - Symbol informing in which calendar the date will be checked
+    #            (default: :brasil).
+    #
+    # Examples
+    #
+    #   Period::Workday.holiday?(Date.new(2012, 5, 1))
+    #   # => true
+    #
+    # Returns a boolean.
+    def self.holiday?(date, calendar: :brasil)
+      HOLIDAYS[calendar].include?(date.to_date)
+    end
 
     # Public: Returns the last workday until the informed date.
     # It returns the informed date in case it is a workday.
