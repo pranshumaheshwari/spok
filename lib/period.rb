@@ -159,9 +159,9 @@ class Period
   #
   # Examples
   #
-  #   period.to_years
+  #   period.years_count
   #   # => 1.6
-  def to_years
+  def years_count
     ((@end_date - @start_date).to_f / 365).to_f.round(1)
   end
 
