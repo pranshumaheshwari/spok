@@ -158,21 +158,21 @@ describe Period do
     end
   end
 
-  describe '#to_years' do
+  describe '#years_count' do
     let(:start_date) { Date.new(2013, 1, 1) }
 
     it 'calculates integer result' do
       end_date = Date.new(2014, 1, 1)
 
-      expect(described_class.new(start_date, end_date).to_years).to eq(1)
+      expect(described_class.new(start_date, end_date).years_count).to eq(1)
     end
 
     it 'calculates fraction result' do
       period = described_class.new(start_date, Date.new(2014, 7, 1))
       greater_period = described_class.new(start_date, Date.new(2014, 9, 1))
 
-      expect(period.to_years).to eq(1.5)
-      expect(greater_period.to_years).to eq(1.7)
+      expect(period.years_count).to eq(1.5)
+      expect(greater_period.years_count).to eq(1.7)
     end
   end
 
