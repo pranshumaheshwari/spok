@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'period/version'
+require 'spok/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'spok'
-  spec.version       = Period::VERSION
+  spec.version       = Spok::VERSION
   spec.authors       = ['Magnetis Staff']
   spec.email         = ['dev@magnetis.com.br']
   spec.summary       = 'A gem to work with periods of dates'

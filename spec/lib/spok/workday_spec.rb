@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'period/workday'
+require 'spok/workday'
 
-describe Period::Workday do
+describe Spok::Workday do
   describe '#workday?' do
     context 'monday' do
       it 'is a workday' do
