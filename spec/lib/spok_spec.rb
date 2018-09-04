@@ -18,6 +18,25 @@ describe Spok do
     end
   end
 
+  describe '#initialize' do
+    it 'does not raise error when start date is before or equals to the end date' do
+      expect { subject }.not_to raise_error
+      expect { described_class.new(sunday, sunday) }.not_to raise_error
+    end
+
+    it 'raises exception when the start date is nil' do
+      expect { described_class.new(nil, sunday) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises exception when the end date is nil' do
+      expect { described_class.new(tuesday, nil) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises exception when the start date is greater than the end date' do
+      expect { described_class.new(tuesday, sunday) }.to raise_error(ArgumentError)
+    end
+  end
+
   describe '#date_as_integer' do
     it 'represents the start date as integer' do
       expect(subject.start_date_as_integer).to eq(20120101)
@@ -35,25 +54,6 @@ describe Spok do
 
     it 'represents the end date as string' do
       expect(subject.end_date_as_string).to eq('20120103')
-    end
-  end
-
-  describe '#validate_period!' do
-    it 'does not raise error when start date is before or equals to the end date' do
-      expect { subject }.not_to raise_error
-      expect { described_class.new(sunday, sunday) }.not_to raise_error
-    end
-
-    it 'raises exception when the start date is nil' do
-      expect { described_class.new(nil, sunday) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises exception when the end date is nil' do
-      expect { described_class.new(tuesday, nil) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises exception when the start date is greater than the end date' do
-      expect { described_class.new(tuesday, sunday) }.to raise_error(ArgumentError)
     end
   end
 
@@ -133,14 +133,14 @@ describe Spok do
     end
   end
 
-  describe '#one_day_period?' do
+  describe '#one_day?' do
     context 'when the start and end date are the same' do
       let(:tuesday)    { sunday }
-      it { expect(subject).to be_one_day_period }
+      it { expect(subject).to be_one_day }
     end
 
     context 'when the start and end date are different' do
-      it { expect(subject).not_to be_one_day_period }
+      it { expect(subject).not_to be_one_day }
     end
   end
 

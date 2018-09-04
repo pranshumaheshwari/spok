@@ -10,8 +10,8 @@ class Spok
 
   # Public: Parses a string into a Spok.
   #
-  # period_string - String containing the period start and end date separated
-  #                 by a dash.
+  # dates_string - String containing the start and end dates for a period of
+  #                 days separated by a dash.
   #
   # Examples
   #
@@ -22,10 +22,10 @@ class Spok
   #   # => nil
   #
   # Returns a Spok or nil when the string does not contain two valid dates.
-  def self.parse(period_string)
-    return nil unless period_string
+  def self.parse(dates_string)
+    return nil unless dates_string
 
-    start_date, end_date = period_string.split('-')
+    start_date, end_date = dates_string.split('-')
 
     if start_date && end_date
       Spok.new(::Date.parse(start_date), ::Date.parse(end_date))
@@ -41,7 +41,7 @@ class Spok
   def initialize(start_date, end_date)
     @start_date = start_date
     @end_date = end_date
-    validate_period!
+    validate!
   end
 
   # Public: Returns the Spok start date as an Integer.
@@ -137,11 +137,11 @@ class Spok
   #
   # Examples
   #
-  #   spok.one_day_period?
+  #   spok.one_day?
   #   # => false
   #
   # Returns a boolean.
-  def one_day_period?
+  def one_day?
     @start_date == @end_date
   end
 
@@ -165,11 +165,11 @@ class Spok
     ((@end_date - @start_date).to_f / 365).to_f.round(1)
   end
 
-  # Public: Compares the Spok with other Spok. Two periods are considered
+  # Public: Compares the Spok with other Spok. Two spoks are considered
   # equal when they are both instances of Spok, and have the same start and
   # end dates.
   #
-  # other_period - Spok to be checked against.
+  # other_spok - Spok to be checked against.
   #
   # Examples
   #
@@ -177,10 +177,10 @@ class Spok
   #   # => false
   #
   # Returns a boolean.
-  def ==(other_period)
-    other_period.class == self.class &&
-    other_period.start_date == @start_date &&
-    other_period.end_date == @end_date
+  def ==(other_spok)
+    other_spok.class == self.class &&
+    other_spok.start_date == @start_date &&
+    other_spok.end_date == @end_date
   end
 
   # Public: Returns a range containing the Dates in the Spok.
@@ -203,7 +203,7 @@ class Spok
     date.strftime(DATE_FORMAT).to_i
   end
 
-  def validate_period!
+  def validate!
     raise ArgumentError.new("Start date must be present.") unless @start_date
     raise ArgumentError.new("End date must be present.") unless @end_date
     if @start_date > @end_date
