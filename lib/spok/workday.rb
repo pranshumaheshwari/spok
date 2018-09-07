@@ -3,9 +3,9 @@ require 'active_support/core_ext'
 require 'set'
 require 'yaml'
 
-class Period
+class Spok
   # Public: Various methods useful for checking for restdays and workdays.
-  # All methods are module methods and should be called on the Period::Workday
+  # All methods are module methods and should be called on the Spok::Workday
   # module.
   module Workday
     # Public: Array of available calendars.
@@ -26,7 +26,7 @@ class Period
     #
     # Examples
     #
-    #   Period::Workday.restday?(Date.new(2012, 8, 6))
+    #   Spok::Workday.restday?(Date.new(2012, 8, 6))
     #   # => false
     #
     # Returns a boolean.
@@ -42,7 +42,7 @@ class Period
     #
     # Examples
     #
-    #   Period::Workday.workday?(Date.new(2012, 8, 6))
+    #   Spok::Workday.workday?(Date.new(2012, 8, 6))
     #   # => true
     #
     # Returns a boolean.
@@ -56,7 +56,7 @@ class Period
     #
     # Examples
     #
-    #   Period::Workday.weekend?(Date.new(2012, 8, 6))
+    #   Spok::Workday.weekend?(Date.new(2012, 8, 6))
     #   # => false
     #
     # Returns a boolean.
@@ -74,7 +74,7 @@ class Period
     #
     # Examples
     #
-    #   Period::Workday.holiday?(Date.new(2012, 5, 1))
+    #   Spok::Workday.holiday?(Date.new(2012, 5, 1))
     #   # => true
     #
     # Returns a boolean.
@@ -90,7 +90,7 @@ class Period
     #            (default: :brasil).
     #
     # Examples
-    #   Period::Workday.last_workday(Date.new(2012, 10, 21))
+    #   Spok::Workday.last_workday(Date.new(2012, 10, 21))
     #   # => #<Date: 2012-10-19 ((2456220j,0s,0n),+0s,2299161j)>
     def self.last_workday(date, calendar: :brasil)
       return date if workday?(date, calendar: calendar)
@@ -106,7 +106,7 @@ class Period
     #            (default: :brasil).
     #
     # Examples
-    #   Period::Workday.next_workday(Date.new(2012, 10, 21))
+    #   Spok::Workday.next_workday(Date.new(2012, 10, 21))
     #   # => #<Date: 2012-10-19 ((2456220j,0s,0n),+0s,2299161j)>
     def self.next_workday(date, calendar: :brasil)
       return date if workday?(date, calendar: calendar)

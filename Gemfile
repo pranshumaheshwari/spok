@@ -1,4 +1,4 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in period.gemspec
+# Specify your gem's dependencies in spok.gemspec
 gemspec

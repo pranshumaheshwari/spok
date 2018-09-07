@@ -1,20 +1,39 @@
 require 'spec_helper'
-require 'period'
+require 'spok'
 
-describe Period do
+describe Spok do
   let(:sunday) { Date.new(2012, 1, 1) }
   let(:monday) { Date.new(2012, 1, 2) }
   let(:tuesday) { Date.new(2012, 1, 3) }
 
-  subject(:period) { described_class.new(sunday, tuesday) }
+  subject(:spok) { described_class.new(sunday, tuesday) }
 
   describe '.parse' do
-    it { expect(described_class.parse('20120101-20120103')).to eq(period) }
+    it { expect(described_class.parse('20120101-20120103')).to eq(spok) }
 
     context 'when the input string is wrong' do
       it { expect(described_class.parse('20120101')).to be_nil }
       it { expect(described_class.parse(nil)).to be_nil }
       it { expect(described_class.parse('')).to be_nil }
+    end
+  end
+
+  describe '#initialize' do
+    it 'does not raise error when start date is before or equals to the end date' do
+      expect { subject }.not_to raise_error
+      expect { described_class.new(sunday, sunday) }.not_to raise_error
+    end
+
+    it 'raises exception when the start date is nil' do
+      expect { described_class.new(nil, sunday) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises exception when the end date is nil' do
+      expect { described_class.new(tuesday, nil) }.to raise_error(ArgumentError)
+    end
+
+    it 'raises exception when the start date is greater than the end date' do
+      expect { described_class.new(tuesday, sunday) }.to raise_error(ArgumentError)
     end
   end
 
@@ -38,33 +57,14 @@ describe Period do
     end
   end
 
-  describe '#validate_period!' do
-    it 'does not raise error when start date is before or equals to the end date' do
-      expect { subject }.not_to raise_error
-      expect { described_class.new(sunday, sunday) }.not_to raise_error
-    end
-
-    it 'raises exception when the start date is nil' do
-      expect { described_class.new(nil, sunday) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises exception when the end date is nil' do
-      expect { described_class.new(tuesday, nil) }.to raise_error(ArgumentError)
-    end
-
-    it 'raises exception when the start date is greater than the end date' do
-      expect { described_class.new(tuesday, sunday) }.to raise_error(ArgumentError)
-    end
-  end
-
   describe '#to_s' do
-    it 'successfully converts Period to String' do
-      expect(period.to_s).to eq('20120101-20120103')
+    it 'successfully converts Spok to String' do
+      expect(spok.to_s).to eq('20120101-20120103')
     end
   end
 
   describe '#workdays' do
-    subject(:period) { described_class.new(sunday, wednesday) }
+    subject(:spok) { described_class.new(sunday, wednesday) }
 
     let(:sunday) { Date.new(2013, 7, 7) }
     let(:monday) { Date.new(2013, 7, 8) }
@@ -72,7 +72,7 @@ describe Period do
     let(:wednesday) { Date.new(2013, 7, 10) }
 
     it 'returns all workdays when no calendar is selected' do
-      expect(period.workdays).to eq([monday, bovespa_holiday, wednesday])
+      expect(spok.workdays).to eq([monday, bovespa_holiday, wednesday])
     end
 
     it 'returns only bovespa workdays when bovespa calendar is selected' do
@@ -133,28 +133,28 @@ describe Period do
     end
   end
 
-  describe '#one_day_period?' do
+  describe '#one_day?' do
     context 'when the start and end date are the same' do
       let(:tuesday)    { sunday }
-      it { expect(subject).to be_one_day_period }
+      it { expect(subject).to be_one_day }
     end
 
     context 'when the start and end date are different' do
-      it { expect(subject).not_to be_one_day_period }
+      it { expect(subject).not_to be_one_day }
     end
   end
 
   describe '#days_count' do
-    it 'counts number of days on period' do
-      period = described_class.new(sunday, tuesday)
+    it 'counts number of days on spok' do
+      spok = described_class.new(sunday, tuesday)
 
-      expect(period.days_count).to eq(2)
+      expect(spok.days_count).to eq(2)
     end
 
     it 'returns 0 when start date is equal to the end date' do
-      period = described_class.new(sunday, sunday)
+      spok = described_class.new(sunday, sunday)
 
-      expect(period.days_count).to eq(0)
+      expect(spok.days_count).to eq(0)
     end
   end
 
@@ -168,42 +168,42 @@ describe Period do
     end
 
     it 'calculates fraction result' do
-      period = described_class.new(start_date, Date.new(2014, 7, 1))
-      greater_period = described_class.new(start_date, Date.new(2014, 9, 1))
+      spok = described_class.new(start_date, Date.new(2014, 7, 1))
+      greater_spok = described_class.new(start_date, Date.new(2014, 9, 1))
 
-      expect(period.years_count).to eq(1.5)
-      expect(greater_period.years_count).to eq(1.7)
+      expect(spok.years_count).to eq(1.5)
+      expect(greater_spok.years_count).to eq(1.7)
     end
   end
 
   describe '#==' do
-    let(:period) { Period.new(sunday, tuesday) }
+    let(:spok) { Spok.new(sunday, tuesday) }
 
-    context 'when periods are equal' do
-      let(:other_period) { Period.new(sunday, tuesday) }
+    context 'when spoks are equal' do
+      let(:other_spok) { Spok.new(sunday, tuesday) }
 
-      it { expect(period == other_period).to eq(true) }
+      it { expect(spok == other_spok).to eq(true) }
     end
 
-    context 'when periods are not equal' do
-      let(:other_period) { Period.new(sunday, monday) }
+    context 'when spoks are not equal' do
+      let(:other_spok) { Spok.new(sunday, monday) }
 
-      it { expect(period == other_period).to eq(false) }
+      it { expect(spok == other_spok).to eq(false) }
     end
 
     context 'when the comparison does respond to start date' do
-      let(:other_period) { double(:other_period, :end_date => double(:end_date)) }
-      it { expect(period == other_period).to eq(false) }
+      let(:other_spok) { double(:other_spok, :end_date => double(:end_date)) }
+      it { expect(spok == other_spok).to eq(false) }
     end
 
     context 'when the comparison does respond to end date' do
-      let(:other_period) { double(:other_period, :start_date => sunday) }
-      it { expect(period == other_period).to eq(false) }
+      let(:other_spok) { double(:other_spok, :start_date => sunday) }
+      it { expect(spok == other_spok).to eq(false) }
     end
   end
 
   describe '#to_range' do
-    subject { Period.new(sunday, tuesday).to_range }
+    subject { Spok.new(sunday, tuesday).to_range }
     it { is_expected.to eq((sunday..tuesday)) }
   end
 end
