@@ -1,5 +1,8 @@
 # Spok
+
 By [Magnetis](https://magnetis.com.br)
+
+[![Build Status](https://travis-ci.org/magnetis/spok.svg?branch=master)](https://travis-ci.org/magnetis/spok)
 
 Spok is a tool for dealing with workdays and restdays in an easy way.
 It also provides functionalities for working with periods of dates.
