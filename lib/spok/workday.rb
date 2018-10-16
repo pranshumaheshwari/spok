@@ -17,6 +17,7 @@ class Spok
       canada
       costa_rica
       guatemala
+      india
       indonesia
       malaysia
       mexico
